@@ -1,5 +1,10 @@
 ## dyn-inventory
 
+[![Crates.io Version](https://img.shields.io/crates/v/dyn-inventory?style=for-the-badge)](https://crates.io/crates/dyn-inventory)
+[![docs.rs](https://img.shields.io/docsrs/dyn-inventory?style=for-the-badge)](https://docs.rs/dyn-inventory)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/joshua-auchincloss/dyn-inventory/test.yaml?style=for-the-badge&label=Tests)
+![Crates.io License](https://img.shields.io/crates/l/dyn-inventory?style=for-the-badge)
+
 proc macro for building runtime plugin registries using dyn-compatible traits and the inventory crate.
 
 this crate generates code to:
@@ -161,14 +166,14 @@ two extra params are currently accepted:
 - `handle_name = Ident`
   - sets the name of the generated handle which implements your plugin. (for example, `handle_name = TheImpl` requires `impl GreeterPlugin for TheImpl`)
 
-## advanced: customizing collection
+## Advanced: customizing collection
 
 the collector type is named by appending `Collector` to your struct name. it exposes:
 
 - `new()` -> builds the collection without modification
 - `new_with(|item: &mut StructName<fn() -> Box<dyn TraitName>>| {...})` -> allows you to mutate the raw entries before they are instantiated into `Box<dyn TraitName>`
 
-## limitations
+## Constraints
 
 - your trait must be object-safe (dyn-compatible)
 - the `inventory` crate must be linked into the final binary; ensure your plugin crates depend on `inventory` and your main binary pulls in the crates that perform registrations

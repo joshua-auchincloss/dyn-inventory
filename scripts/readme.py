@@ -22,7 +22,7 @@ def get_readme():
     contents = README.read_text()
     out = ""
     for ln in contents.splitlines():
-        out += "\n/// " + to_rs(ln)
+        out += "\n//! " + to_rs(ln)
     return out
 
 def find_idx_of(haystack: list[str], needle: str)-> int:
