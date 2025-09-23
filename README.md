@@ -1,6 +1,6 @@
 ## dyn-inventory
 
-procedural macro helpers for building a runtime plugin inventory around dyn-compatible traits using the `inventory` crate.
+proc macro for building runtime plugin registries using dyn-compatible traits and the inventory crate.
 
 this crate generates code to:
 

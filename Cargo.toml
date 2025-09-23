@@ -1,7 +1,12 @@
 [package]
 name = "dyn-inventory"
+description = "proc macro for building runtime plugin registries using dyn-compatible traits and the inventory crate."
 version = "0.1.0"
 edition = "2024"
+license = "MIT"
+readme = "README.md"
+authors = ["Joshua Auchincloss <joshua.auchincloss@proton.me>"]
+repository = "https://github.com/joshua-auchincloss/dyn-inventory.git"
 
 [lib]
 proc-macro = true
