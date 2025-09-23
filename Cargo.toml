@@ -1,7 +1,7 @@
 [package]
 name = "dyn-inventory"
 description = "proc macro for building runtime plugin registries using dyn-compatible traits and the inventory crate."
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
 license = "MIT"
 readme = "README.md"
