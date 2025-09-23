@@ -1,0 +1,79 @@
+error[E0038]: the trait `MyTrait` is not dyn compatible
+  --> tests/failures/is_not_dyn_compat.rs:17:2
+   |
+17 |   dyn_inventory! {
+   |  __^
+18 | |     MyTrait: Plugin<Handle> {
+19 | |         handle: Handle
+20 | |     };
+21 | | }
+   | |_^ `MyTrait` is not dyn compatible
+   |
+note: for a trait to be dyn compatible it needs to allow building a vtable
+      for more information, visit <https://doc.rust-lang.org/reference/items/traits.html#dyn-compatibility>
+  --> tests/failures/is_not_dyn_compat.rs:14:8
+   |
+13 | trait MyTrait {
+   |       ------- this trait is not dyn compatible...
+14 |     fn nolookup() -> &'static str;
+   |        ^^^^^^^^ ...because associated function `nolookup` has no `self` parameter
+   = note: this error originates in the macro `dyn_inventory` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: consider turning `nolookup` into a method by giving it a `&self` argument
+   |
+14 |     fn nolookup(&self) -> &'static str;
+   |                 +++++
+help: alternatively, consider constraining `nolookup` so it does not apply to trait objects
+   |
+14 |     fn nolookup() -> &'static str where Self: Sized;
+   |                                   +++++++++++++++++
+
+error[E0038]: the trait `MyTrait` is not dyn compatible
+  --> tests/failures/is_not_dyn_compat.rs:17:1
+   |
+17 | / dyn_inventory! {
+18 | |     MyTrait: Plugin<Handle> {
+19 | |         handle: Handle
+20 | |     };
+21 | | }
+   | |_^ `MyTrait` is not dyn compatible
+   |
+note: for a trait to be dyn compatible it needs to allow building a vtable
+      for more information, visit <https://doc.rust-lang.org/reference/items/traits.html#dyn-compatibility>
+  --> tests/failures/is_not_dyn_compat.rs:14:8
+   |
+13 | trait MyTrait {
+   |       ------- this trait is not dyn compatible...
+14 |     fn nolookup() -> &'static str;
+   |        ^^^^^^^^ ...because associated function `nolookup` has no `self` parameter
+   = note: this error originates in the macro `dyn_inventory` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: consider turning `nolookup` into a method by giving it a `&self` argument
+   |
+14 |     fn nolookup(&self) -> &'static str;
+   |                 +++++
+help: alternatively, consider constraining `nolookup` so it does not apply to trait objects
+   |
+14 |     fn nolookup() -> &'static str where Self: Sized;
+   |                                   +++++++++++++++++
+
+error[E0038]: the trait `MyTrait` is not dyn compatible
+  --> tests/failures/is_not_dyn_compat.rs:18:5
+   |
+18 |     MyTrait: Plugin<Handle> {
+   |     ^^^^^^^ `MyTrait` is not dyn compatible
+   |
+note: for a trait to be dyn compatible it needs to allow building a vtable
+      for more information, visit <https://doc.rust-lang.org/reference/items/traits.html#dyn-compatibility>
+  --> tests/failures/is_not_dyn_compat.rs:14:8
+   |
+13 | trait MyTrait {
+   |       ------- this trait is not dyn compatible...
+14 |     fn nolookup() -> &'static str;
+   |        ^^^^^^^^ ...because associated function `nolookup` has no `self` parameter
+help: consider turning `nolookup` into a method by giving it a `&self` argument
+   |
+14 |     fn nolookup(&self) -> &'static str;
+   |                 +++++
+help: alternatively, consider constraining `nolookup` so it does not apply to trait objects
+   |
+14 |     fn nolookup() -> &'static str where Self: Sized;
+   |                                   +++++++++++++++++

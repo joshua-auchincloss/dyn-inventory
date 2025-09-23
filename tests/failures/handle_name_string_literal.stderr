@@ -1,0 +1,5 @@
+error: expected identifier
+  --> tests/failures/handle_name_string_literal.rs:18:19
+   |
+18 |     handle_name = "HandleThing",
+   |                   ^^^^^^^^^^^^^

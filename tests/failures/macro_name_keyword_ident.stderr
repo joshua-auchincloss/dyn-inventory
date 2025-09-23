@@ -1,0 +1,5 @@
+error: expected identifier, found keyword `fn`
+  --> tests/failures/macro_name_keyword_ident.rs:18:18
+   |
+18 |     macro_name = fn,
+   |                  ^^

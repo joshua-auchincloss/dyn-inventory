@@ -1,0 +1,5 @@
+error: expected identifier
+  --> tests/failures/macro_name_string_literal.rs:18:18
+   |
+18 |     macro_name = "my_macro",
+   |                  ^^^^^^^^^^

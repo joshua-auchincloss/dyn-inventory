@@ -1,0 +1,13 @@
+single_line_let_else_max_width = 0
+single_line_if_else_max_width = 0
+match_block_trailing_comma = true
+format_code_in_doc_comments = true
+indent_style = "Block"
+style_edition = "2024"
+match_arm_blocks = true
+imports_granularity = "Crate"
+brace_style = "PreferSameLine"
+chain_width = 45
+
+fn_params_layout = "Vertical"
+force_multiline_blocks = true
