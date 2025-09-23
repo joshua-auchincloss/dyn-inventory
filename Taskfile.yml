@@ -1,0 +1,8 @@
+version: "3"
+
+tasks:
+  readme:
+    cmds:
+      - python scripts/readme.py
+      - cargo +nightly fmt
+      - cargo test --doc
