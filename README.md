@@ -57,7 +57,7 @@ the plugins produced by this crate are stored and used as `Box<dyn Trait>`. when
 
 ## Quick Start
 
-1). add dependencies:
+1. add dependencies:
 
 ```toml
 [dependencies]
@@ -129,7 +129,7 @@ for plugin in collected.plugins {
 }
 ```
 
-## macro syntax
+## Macro Syntax
 
 ```rust,ignore
 use dyn_inventory::dyn_inventory;
@@ -152,21 +152,21 @@ dyn_inventory!(
 );
 ```
 
-## extra params
+## Extra Parameters
 
 two extra params are currently accepted:
 
 - `macro_name = ident`
   - sets the name of the generated registration macro. by default it is the snake_case of `StructName` (for example, `GreeterPlugin` -> `greeter_plugin`).
 - `handle_name = Ident`
-  - reserved for future use. currently parsed but not emitted as a separate symbol.
+  - sets the name of the generated handle which implements your plugin. (for example, `handle_name = TheImpl` requires `impl GreeterPlugin for TheImpl`)
 
 ## advanced: customizing collection
 
 the collector type is named by appending `Collector` to your struct name. it exposes:
 
 - `new()` -> builds the collection without modification
-- `new_with(|item: &mut StructName<fn() -> Box<dyn TraitName>>| ...)` -> allows you to mutate the raw entries before they are instantiated into `Box<dyn TraitName>`
+- `new_with(|item: &mut StructName<fn() -> Box<dyn TraitName>>| {...})` -> allows you to mutate the raw entries before they are instantiated into `Box<dyn TraitName>`
 
 ## limitations
 

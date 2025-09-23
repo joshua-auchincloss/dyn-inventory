@@ -58,7 +58,7 @@
 ///
 /// ## Quick Start
 ///
-/// 1). add dependencies:
+/// 1. add dependencies:
 ///
 /// ```toml
 /// [dependencies]
@@ -130,7 +130,7 @@
 /// }
 /// ```
 ///
-/// ## macro syntax
+/// ## Macro Syntax
 ///
 /// ```rust,ignore
 /// use dyn_inventory::dyn_inventory;
@@ -153,21 +153,21 @@
 /// );
 /// ```
 ///
-/// ## extra params
+/// ## Extra Parameters
 ///
 /// two extra params are currently accepted:
 ///
 /// - `macro_name = ident`
 /// - sets the name of the generated registration macro. by default it is the snake_case of `StructName` (for example, `GreeterPlugin` -> `greeter_plugin`).
 /// - `handle_name = Ident`
-/// - reserved for future use. currently parsed but not emitted as a separate symbol.
+/// - sets the name of the generated handle which implements your plugin. (for example, `handle_name = TheImpl` requires `impl GreeterPlugin for TheImpl`)
 ///
 /// ## advanced: customizing collection
 ///
 /// the collector type is named by appending `Collector` to your struct name. it exposes:
 ///
 /// - `new()` -> builds the collection without modification
-/// - `new_with(|item: &mut StructName<fn() -> Box<dyn TraitName>>| ...)` -> allows you to mutate the raw entries before they are instantiated into `Box<dyn TraitName>`
+/// - `new_with(|item: &mut StructName<fn() -> Box<dyn TraitName>>| {...})` -> allows you to mutate the raw entries before they are instantiated into `Box<dyn TraitName>`
 ///
 /// ## limitations
 ///
@@ -192,7 +192,7 @@ pub fn dyn_inventory(tok: TokenStream) -> TokenStream {
 
     let trt = &args.trait_name;
     let strct = &args.struct_name;
-    let handle = &args.handle_name;
+    let handle_name = &args.handle_name;
     let generic = &args.generic_param;
     let macro_name = &args.macro_name;
     let generic_str = generic.to_string();
@@ -300,7 +300,7 @@ pub fn dyn_inventory(tok: TokenStream) -> TokenStream {
                 #fields_as_expr
             ) => {
                 #macro_name!{
-                    pub #handle {
+                    pub #handle_name {
                         #fields_as_expr_call
                     }
                 }
