@@ -1,0 +1,62 @@
+name: Check and Lint
+
+on:
+  pull_request:
+  push:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/cache@v4
+        with:
+          path: |
+            target/
+          key: ${{ hashFiles('src/**', 'Cargo.toml', 'Cargo.lock') }}
+
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          components: cargo
+
+      - name: Cargo Check
+        run: |
+          cargo check --all-features
+
+  fmt:
+    name: Cargo Fmt
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: nightly
+          components: rustfmt
+
+      - run: rustup component add rustfmt
+      - name: Cargo Check Fmt
+        run: |
+          cargo +nightly fmt --all -- --check
+
+  clippy:
+    name: Cargo Clippy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: nightly
+          components: rustfmt
+
+      - run: rustup component add rustfmt
+      - name: Cargo Check Fmt
+        run: |
+          cargo +nightly fmt --all -- --check
