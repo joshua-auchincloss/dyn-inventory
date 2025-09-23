@@ -1,3 +1,5 @@
+#![allow(clippy::needless_doctest_main)]
+
 /* START OF README CONTENTS */
 
 /// ## dyn-inventory
@@ -18,22 +20,22 @@
 /// }
 ///
 /// dyn_inventory! {
-/// MyPlugin: Plugin<Handle> {
-/// pub name: &'static str,
-/// desc: &'static str,
-/// handle: Handle
-/// };
-/// macro_name = new_plugin
+///     MyPlugin: Plugin<Handle> {
+///         pub name: &'static str,
+///         desc: &'static str,
+///         handle: Handle
+///     };
+///     macro_name = new_plugin
 /// }
 ///
 /// mod my_plugin {
 ///     use crate::{MyPlugin, Plugin};
 ///
 ///     new_plugin! {
-///     Handle {
-///     name = "my plugin for abc-framework";
-///     desc = "implements my plugin by doing xyz";
-///     }
+///         Handle {
+///             name = "my plugin for abc-framework";
+///             desc = "implements my plugin by doing xyz";
+///         }
 ///     }
 ///
 ///     impl MyPlugin for Handle {
@@ -78,28 +80,28 @@
 ///
 /// ```rust
 /// pub trait Greeter {
-/// fn greet(&self) -> String;
+///     fn greet(&self) -> String;
 /// }
 ///
 /// dyn_inventory::dyn_inventory!(
-/// Greeter: GreeterPlugin<T> {
-/// name: &'static str,
-/// version: u32,
-/// t: T,
-/// };
-/// // optional extra params, see below
-/// macro_name = register_greeter,
+///     Greeter: GreeterPlugin<T> {
+///         name: &'static str,
+///         version: u32,
+///         t: T,
+///     };
+///     // optional extra params, see below
+///     macro_name = register_greeter,
 /// );
 /// ```
 ///
 ///
-/// what this generates:
+///  what this generates:
 ///
-/// - a struct `GreeterPlugin<T>` with the fields you declared
-/// - an implementation `impl<T> GreeterPlugin<T> { pub const fn new(...) -> Self }`
-/// - an inventory registration type `inventory::collect!(GreeterPlugin<fn() -> Box<dyn Greeter>>)`
-/// - a macro `register_greeter!` (snake_case of the struct name by default) to register plugins
-/// - a collector `GreeterPluginCollector` that has `plugin` of type `Vec<GreeterPlugin<Box<dyn Greeter>>>`
+///  - a struct `GreeterPlugin<T>` with the fields you declared
+///  - an implementation `impl<T> GreeterPlugin<T> { pub const fn new(...) -> Self }`
+///  - an inventory registration type `inventory::collect!(GreeterPlugin<fn() -> Box<dyn Greeter>>)`
+///  - a macro `register_greeter!` (snake_case of the struct name by default) to register plugins
+///  - a collector `GreeterPluginCollector` that has `plugin` of type `Vec<GreeterPlugin<Box<dyn Greeter>>>`
 ///
 /// 4. register a plugin somewhere in your code (could be another crate that depends on your trait crate):
 ///
@@ -108,15 +110,15 @@
 ///
 /// // this expands to a unit struct named `MyGreeter` and registers it into the inventory
 /// register_greeter! {
-/// pub MyGreeter {
-/// name = "hello";
-/// version = 1;
-/// }
+///     pub MyGreeter {
+///         name = "hello";
+///         version = 1;
+///     }
 /// }
 ///
 /// // you implement the trait for the generated unit struct
 /// impl Greeter for MyGreeter {
-/// fn greet(&self) -> String { "hi".to_string() }
+///     fn greet(&self) -> String { "hi".to_string() }
 /// }
 /// ```
 ///
@@ -125,8 +127,8 @@
 /// ```rust,ignore
 /// let collected = GreeterPluginCollector::new();
 /// for plugin in collected.plugins {
-/// // `plugin.t` is now a `Box<dyn Greeter>`; other fields are your metadata
-/// println!("{} -> {}", plugin.name, plugin.t.greet());
+///     // `plugin.t` is now a `Box<dyn Greeter>`; other fields are your metadata
+///     println!("{} -> {}", plugin.name, plugin.t.greet());
 /// }
 /// ```
 ///
@@ -136,20 +138,20 @@
 /// use dyn_inventory::dyn_inventory;
 ///
 /// dyn_inventory!(
-/// TraitName: StructName<Handle> {
-/// // exactly one field must have type `Handle`.
-/// // the field whose type equals the generic parameter (`Generic`) is treated as the plugin “handle”.
-/// // internally during registration this field is filled with a function pointer `fn() -> Box<dyn TraitName>`, and the collector converts it to `Box<dyn TraitName>` by calling it.
-/// handle: Handle,
+///     TraitName: StructName<Handle> {
+///         // exactly one field must have type `Handle`.
+///         // the field whose type equals the generic parameter (`Generic`) is treated as the plugin “handle”.
+///         // internally during registration this field is filled with a function pointer `fn() -> Box<dyn TraitName>`, and the collector converts it to `Box<dyn TraitName>` by calling it.
+///         handle: Handle,
 ///
-/// // optional visibity specifier
-/// // any number of metadata fields are preserved
-/// pub|pub(crate)? field_name: &'static str,
-/// pub other_field: usize,
-/// };
-/// // optional, comma-separated extra params
-/// macro_name = some_ident,
-/// handle_name = SomeIdent,
+///         // optional visibity specifier
+///         // any number of metadata fields are preserved
+///         pub|pub(crate)? field_name: &'static str,
+///         pub other_field: usize,
+///     };
+///     // optional, comma-separated extra params
+///     macro_name = some_ident,
+///     handle_name = SomeIdent,
 /// );
 /// ```
 ///
@@ -158,9 +160,9 @@
 /// two extra params are currently accepted:
 ///
 /// - `macro_name = ident`
-/// - sets the name of the generated registration macro. by default it is the snake_case of `StructName` (for example, `GreeterPlugin` -> `greeter_plugin`).
+///   - sets the name of the generated registration macro. by default it is the snake_case of `StructName` (for example, `GreeterPlugin` -> `greeter_plugin`).
 /// - `handle_name = Ident`
-/// - sets the name of the generated handle which implements your plugin. (for example, `handle_name = TheImpl` requires `impl GreeterPlugin for TheImpl`)
+///   - sets the name of the generated handle which implements your plugin. (for example, `handle_name = TheImpl` requires `impl GreeterPlugin for TheImpl`)
 ///
 /// ## advanced: customizing collection
 ///

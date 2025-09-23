@@ -6,3 +6,11 @@ tasks:
       - python scripts/readme.py
       - cargo +nightly fmt
       - cargo test --doc
+
+  clippy:
+    cmd: cargo clippy
+
+  pre-commit:
+    cmds:
+      - task: readme
+      - task: clippy
