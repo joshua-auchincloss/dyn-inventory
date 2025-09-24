@@ -1,0 +1,5 @@
+error: expected `=`
+  --> tests/failures/missing_equals_in_opt.rs:18:15
+   |
+18 |     init_name bad_name,
+   |               ^^^^^^^^

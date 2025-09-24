@@ -1,5 +1,5 @@
 error: expected `,`
   --> tests/failures/missing_comma_between_opts.rs:19:5
    |
-19 |     handle_name = MyHandle,
-   |     ^^^^^^^^^^^
+19 |     unknown = RegisterTwo,
+   |     ^^^^^^^

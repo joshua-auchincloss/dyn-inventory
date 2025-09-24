@@ -1,23 +1,23 @@
-[package]
-name = "dyn-inventory"
+[workspace.package]
 description = "proc macro for building runtime plugin registries using dyn-compatible traits and the inventory crate."
 version = "0.1.1"
 edition = "2024"
 license = "MIT"
-readme = "README.md"
+readme = "../README.md"
 authors = ["Joshua Auchincloss <joshua.auchincloss@proton.me>"]
 repository = "https://github.com/joshua-auchincloss/dyn-inventory.git"
 
-[lib]
-proc-macro = true
 
-[dependencies]
-convert_case = "0.8"
+[workspace]
+members = ["dyn-inventory", "examples/*"]
+resolver = "3"
+
+[workspace.dependencies]
 proc-macro2 = "1"
 quote = "1"
 syn = "2"
 
-[dev-dependencies]
+# dev deps
 test-case = "3"
 trybuild = "1"
 inventory = "0.3"

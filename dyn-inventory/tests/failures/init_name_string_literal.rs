@@ -1,4 +1,4 @@
-// handle_name must be an identifier
+// macro_name extraparams value must be an identifier not string literal
 //
 //
 //
@@ -11,11 +11,11 @@
 use dyn_inventory::dyn_inventory;
 
 dyn_inventory!(
-    MyTrait: MyStruct<T> {
+    LiteralRegistry<T: Plugin> {
         data: u64,
         t: T,
     };
-    handle_name = "HandleThing",
+    init_name = "MyInit",
 );
 
 fn main() {}

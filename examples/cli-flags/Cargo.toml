@@ -1,0 +1,15 @@
+[package]
+name = "abc-cli-flags"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[[bin]]
+name = "greeter"
+
+[dependencies]
+dyn-inventory = { path = "../../dyn-inventory" }
+inventory = "0.3"
+
+[dev-dependencies]
+test-case.workspace = true

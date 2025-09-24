@@ -1,0 +1,23 @@
+[package]
+name = "dyn-inventory"
+
+description.workspace = true
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+readme.workspace = true
+authors.workspace = true
+repository.workspace = true
+
+[lib]
+proc-macro = true
+
+[dependencies]
+proc-macro2.workspace = true
+quote.workspace = true
+syn.workspace = true
+
+[dev-dependencies]
+test-case.workspace = true
+trybuild.workspace = true
+inventory.workspace = true

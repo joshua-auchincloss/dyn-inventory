@@ -21,21 +21,20 @@ pub trait MyPlugin {
 }
 
 dyn_inventory! {
-    MyPlugin: Plugin<Handle> {
+    Plugin<Handle: MyPlugin> {
         pub name: &'static str,
         desc: &'static str,
         handle: Handle
-    };
-    macro_name = new_plugin
+    }
 }
 
 mod my_plugin {
-    use crate::{MyPlugin, Plugin};
+    use crate::{MyPlugin, Plugin, PluginInit};
 
-    new_plugin! {
-        Handle {
-            name = "my plugin for abc-framework";
-            desc = "implements my plugin by doing xyz";
+    dyn_inventory::emit! {
+        Handle MyPlugin as Plugin {
+            name = "my plugin for abc-framework",
+            desc = "implements my plugin by doing xyz"
         }
     }
 
@@ -86,35 +85,32 @@ pub trait Greeter {
 }
 
 dyn_inventory::dyn_inventory!(
-    Greeter: GreeterPlugin<T> {
+    GreeterPlugin<T: Greeter> {
         name: &'static str,
         version: u32,
         t: T,
     };
-    // optional extra params, see below
-    macro_name = register_greeter,
 );
 ```
 
 > [!TIP]
 > what this generates:
 >
-> - a struct `GreeterPlugin<T>` with the fields you declared
-> - an implementation `impl<T> GreeterPlugin<T> { pub const fn new(...) -> Self }`
-> - an inventory registration type `inventory::collect!(GreeterPlugin<fn() -> Box<dyn Greeter>>)`
-> - a macro `register_greeter!` (snake_case of the struct name by default) to register plugins
-> - a collector `GreeterPluginCollector` that has `plugin` of type `Vec<GreeterPlugin<Box<dyn Greeter>>>`
+> - a struct `GreeterPlugin` with the fields you declared, and a `Box<dyn Greeter>`
+> - an inventory registration type `inventory::collect!(GreeterPluginInit)`
+> - a collector `GreeterPluginCollector` that has `plugin` of type `Vec<GreeterPlugin>`
 
 4. register a plugin somewhere in your code (could be another crate that depends on your trait crate):
 
 ```rust,ignore
-use crate::{Greeter, register_greeter};
+use crate::{Greeter, GreeterPlugin, GreeterPluginInit};
+use dyn_inventory::emit;
 
 // this expands to a unit struct named `MyGreeter` and registers it into the inventory
-register_greeter! {
-    pub MyGreeter {
-        name = "hello";
-        version = 1;
+emit! {
+    MyGreeter Greeter for GreeterPlugin {
+        name = "hello",
+        version = 1,
     }
 }
 
@@ -128,7 +124,7 @@ impl Greeter for MyGreeter {
 
 ```rust,ignore
 let collected = GreeterPluginCollector::new();
-for plugin in collected.plugins {
+for plugin in &collected.plugins {
     // `plugin.t` is now a `Box<dyn Greeter>`; other fields are your metadata
     println!("{} -> {}", plugin.name, plugin.t.greet());
 }
@@ -140,7 +136,7 @@ for plugin in collected.plugins {
 use dyn_inventory::dyn_inventory;
 
 dyn_inventory!(
-    TraitName: StructName<Handle> {
+    StructName<Handle: TraitName> {
         // exactly one field must have type `Handle`.
         // the field whose type equals the generic parameter (`Generic`) is treated as the plugin “handle”.
         // internally during registration this field is filled with a function pointer `fn() -> Box<dyn TraitName>`, and the collector converts it to `Box<dyn TraitName>` by calling it.
@@ -148,12 +144,11 @@ dyn_inventory!(
 
         // optional visibity specifier
         // any number of metadata fields are preserved
-        pub|pub(crate)? field_name: &'static str,
+        pub|pub(crate) field_name: &'static str,
         pub other_field: usize,
     };
     // optional, comma-separated extra params
-    macro_name = some_ident,
-    handle_name = SomeIdent,
+    init_name = InitStructName,
 );
 ```
 
@@ -161,19 +156,18 @@ dyn_inventory!(
 
 two extra params are currently accepted:
 
-- `macro_name = ident`
-  - sets the name of the generated registration macro. by default it is the snake_case of `StructName` (for example, `GreeterPlugin` -> `greeter_plugin`).
-- `handle_name = Ident`
-  - sets the name of the generated handle which implements your plugin. (for example, `handle_name = TheImpl` requires `impl GreeterPlugin for TheImpl`)
+- `init_name = ident`
+  - sets the name of the generated initialization struct. by default it is the snake_case of `StructName` (for example, `GreeterPlugin` -> `greeter_plugin`).
 
 ## Advanced: customizing collection
 
 the collector type is named by appending `Collector` to your struct name. it exposes:
 
 - `new()` -> builds the collection without modification
-- `new_with(|item: &mut StructName<fn() -> Box<dyn TraitName>>| {...})` -> allows you to mutate the raw entries before they are instantiated into `Box<dyn TraitName>`
+- `new_with(|item: &mut StructName| {...})` -> allows you to mutate the raw entries after they are instantiated into `Box<dyn TraitName>`
 
 ## Constraints
 
 - your trait must be object-safe (dyn-compatible)
 - the `inventory` crate must be linked into the final binary; ensure your plugin crates depend on `inventory` and your main binary pulls in the crates that perform registrations
+- plugins must not carry state. instead, pass state as trait function parameters.

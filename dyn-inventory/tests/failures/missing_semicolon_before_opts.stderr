@@ -1,5 +1,5 @@
 error: expected `;`
   --> tests/failures/missing_semicolon_before_opts.rs:18:5
    |
-18 |     macro_name = my_macro,
-   |     ^^^^^^^^^^
+18 |     init_name = register_missing,
+   |     ^^^^^^^^^

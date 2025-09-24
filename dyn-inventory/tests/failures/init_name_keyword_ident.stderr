@@ -1,0 +1,5 @@
+error: expected identifier, found keyword `fn`
+  --> tests/failures/init_name_keyword_ident.rs:18:17
+   |
+18 |     init_name = fn,
+   |                 ^^
