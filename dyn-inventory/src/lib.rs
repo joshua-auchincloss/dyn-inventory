@@ -68,7 +68,7 @@
 //! ```toml
 //! [dependencies]
 //! inventory = "0.3"
-//! dyn-inventory = "0.1"
+//! dyn-inventory = "0.2"
 //! ```
 //!
 //! 2. define a trait that is dyn-compatible:
@@ -138,6 +138,8 @@
 //! use dyn_inventory::dyn_inventory;
 //!
 //! dyn_inventory!(
+//!     // StructName = the name of the struct that holds the Box<dyn TraitName>
+//!     // TraitName - the trait which needs a dyn-inventory
 //!     StructName<Handle: TraitName> {
 //!         // exactly one field must have type `Handle`.
 //!         // the field whose type equals the generic parameter (`Generic`) is treated as the plugin “handle”.

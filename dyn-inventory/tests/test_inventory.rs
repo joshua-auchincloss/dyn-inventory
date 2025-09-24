@@ -1,3 +1,4 @@
+#![allow(unused)]
 use dyn_inventory::dyn_inventory;
 
 pub trait MyPlugin {
@@ -6,7 +7,7 @@ pub trait MyPlugin {
 
 dyn_inventory! {
     Plugin<Handle: MyPlugin> {
-        pub name: &'static str,
+        pub(crate) name: &'static str,
         pub desc: &'static str,
         handle: Handle
     };

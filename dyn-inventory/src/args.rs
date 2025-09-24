@@ -4,6 +4,14 @@ use syn::{
     Ident, Token, TypePath, TypeReference, Visibility, braced, parse::Parse, punctuated::Punctuated,
 };
 
+fn parse_vis(input: syn::parse::ParseStream) -> Visibility {
+    if input.peek(Token![pub]) {
+        input.parse().unwrap()
+    } else {
+        Visibility::Inherited
+    }
+}
+
 pub enum RefOrTy {
     Ty(TypePath),
     Ref(TypeReference),
@@ -59,9 +67,7 @@ pub struct Field {
 impl Parse for Field {
     fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
         Ok(Self {
-            vis: input
-                .parse()
-                .unwrap_or(Visibility::Inherited),
+            vis: parse_vis(input),
             name: input.parse()?,
             sep: input.parse()?,
             ty: input.parse()?,
@@ -221,6 +227,7 @@ impl ToTokens for Args {
         &self,
         tokens: &mut TokenStream,
     ) {
+        let vis = Visibility::Public(syn::token::Pub(Span::call_site()));
         let trt = &self.trait_name;
         let strct = &self.struct_name;
         let generic = &self.generic_param;
@@ -271,7 +278,7 @@ impl ToTokens for Args {
 
         let struct_def = quote::quote! {
             #[derive(Clone)]
-            pub struct #struct_init {
+            #vis struct #struct_init {
                 #fields_init
             }
 
@@ -283,7 +290,7 @@ impl ToTokens for Args {
                 }
             }
 
-            pub struct #strct {
+            #vis struct #strct {
                 #fields_final
             }
         };
@@ -297,8 +304,8 @@ impl ToTokens for Args {
         let plugin_collector = Ident::new(&format!("{}Collector", strct), Span::call_site());
 
         let plugin_collector = quote::quote! {
-            pub struct #plugin_collector{
-                pub plugins: Vec<#strct>
+            #vis struct #plugin_collector{
+                #vis plugins: Vec<#strct>
             }
 
             impl #plugin_collector {
