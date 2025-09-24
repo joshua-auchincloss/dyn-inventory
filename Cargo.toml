@@ -3,7 +3,7 @@ description = "proc macro for building runtime plugin registries using dyn-compa
 version = "0.2.0"
 edition = "2024"
 license = "MIT"
-readme = "../README.md"
+readme = "README.md"
 authors = ["Joshua Auchincloss <joshua.auchincloss@proton.me>"]
 repository = "https://github.com/joshua-auchincloss/dyn-inventory.git"
 
