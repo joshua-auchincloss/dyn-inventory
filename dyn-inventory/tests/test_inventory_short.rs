@@ -5,7 +5,7 @@ pub trait HandlesFlag {
 }
 
 dyn_inventory! {
-    cFlag <Handle: HandlesFlag> {
+    Flag <Handle: HandlesFlag> {
         pub name: &'static str,
         handle: Handle
     };

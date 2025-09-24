@@ -4,6 +4,14 @@ use syn::{
     Ident, Token, TypePath, TypeReference, Visibility, braced, parse::Parse, punctuated::Punctuated,
 };
 
+fn parse_vis(input: syn::parse::ParseStream) -> Visibility {
+    if input.peek(Token![pub]) {
+        input.parse().unwrap()
+    } else {
+        Visibility::Inherited
+    }
+}
+
 pub enum RefOrTy {
     Ty(TypePath),
     Ref(TypeReference),
@@ -59,9 +67,7 @@ pub struct Field {
 impl Parse for Field {
     fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
         Ok(Self {
-            vis: input
-                .parse()
-                .unwrap_or(Visibility::Inherited),
+            vis: parse_vis(input),
             name: input.parse()?,
             sep: input.parse()?,
             ty: input.parse()?,
@@ -115,8 +121,6 @@ impl Parse for ExtraOpts {
 }
 
 pub struct Args {
-    pub vis: Visibility,
-
     pub struct_name: Ident,
 
     pub trait_name: Ident,
@@ -138,12 +142,6 @@ pub struct Args {
 
 impl Parse for Args {
     fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
-        let vis: Visibility = if input.peek(syn::token::Pub) {
-            input.parse()?
-        } else {
-            Visibility::Inherited
-        };
-
         let struct_name: Ident = input.parse()?;
         let _: Token![<] = input.parse()?;
 
@@ -177,7 +175,6 @@ impl Parse for Args {
         };
 
         let mut this = Self {
-            vis,
             init_name,
             trait_name,
             struct_name,
@@ -230,7 +227,7 @@ impl ToTokens for Args {
         &self,
         tokens: &mut TokenStream,
     ) {
-        let vis = &self.vis;
+        let vis = Visibility::Public(syn::token::Pub(Span::call_site()));
         let trt = &self.trait_name;
         let strct = &self.struct_name;
         let generic = &self.generic_param;
