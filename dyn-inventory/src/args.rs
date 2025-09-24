@@ -115,6 +115,8 @@ impl Parse for ExtraOpts {
 }
 
 pub struct Args {
+    pub vis: Visibility,
+
     pub struct_name: Ident,
 
     pub trait_name: Ident,
@@ -136,6 +138,12 @@ pub struct Args {
 
 impl Parse for Args {
     fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
+        let vis: Visibility = if input.peek(syn::token::Pub) {
+            input.parse()?
+        } else {
+            Visibility::Inherited
+        };
+
         let struct_name: Ident = input.parse()?;
         let _: Token![<] = input.parse()?;
 
@@ -169,6 +177,7 @@ impl Parse for Args {
         };
 
         let mut this = Self {
+            vis,
             init_name,
             trait_name,
             struct_name,
@@ -221,6 +230,7 @@ impl ToTokens for Args {
         &self,
         tokens: &mut TokenStream,
     ) {
+        let vis = &self.vis;
         let trt = &self.trait_name;
         let strct = &self.struct_name;
         let generic = &self.generic_param;
@@ -271,7 +281,7 @@ impl ToTokens for Args {
 
         let struct_def = quote::quote! {
             #[derive(Clone)]
-            pub struct #struct_init {
+            #vis struct #struct_init {
                 #fields_init
             }
 
@@ -283,7 +293,7 @@ impl ToTokens for Args {
                 }
             }
 
-            pub struct #strct {
+            #vis struct #strct {
                 #fields_final
             }
         };
@@ -297,8 +307,8 @@ impl ToTokens for Args {
         let plugin_collector = Ident::new(&format!("{}Collector", strct), Span::call_site());
 
         let plugin_collector = quote::quote! {
-            pub struct #plugin_collector{
-                pub plugins: Vec<#strct>
+            #vis struct #plugin_collector{
+                #vis plugins: Vec<#strct>
             }
 
             impl #plugin_collector {

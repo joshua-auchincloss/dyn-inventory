@@ -1,3 +1,4 @@
+#![allow(unused)]
 use dyn_inventory::dyn_inventory;
 
 pub trait MyPlugin {

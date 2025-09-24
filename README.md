@@ -136,7 +136,10 @@ for plugin in &collected.plugins {
 use dyn_inventory::dyn_inventory;
 
 dyn_inventory!(
-    StructName<Handle: TraitName> {
+    // optional visibility specifier (pub | pub(crate))
+    // StructName = the name of the struct that holds the Box<dyn TraitName>
+    // TraitName - the trait which needs a dyn-inventory
+    pub|pub(crate) StructName<Handle: TraitName> {
         // exactly one field must have type `Handle`.
         // the field whose type equals the generic parameter (`Generic`) is treated as the plugin “handle”.
         // internally during registration this field is filled with a function pointer `fn() -> Box<dyn TraitName>`, and the collector converts it to `Box<dyn TraitName>` by calling it.
