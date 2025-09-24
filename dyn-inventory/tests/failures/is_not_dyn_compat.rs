@@ -15,7 +15,7 @@ trait MyTrait {
 }
 
 dyn_inventory! {
-    MyTrait: Plugin<Handle> {
+    Plugin<Handle: MyTrait> {
         handle: Handle
     };
 }

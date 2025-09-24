@@ -5,21 +5,22 @@ pub trait MyPlugin {
 }
 
 dyn_inventory! {
-    MyPlugin: Plugin<Handle> {
+    Plugin<Handle: MyPlugin> {
         pub name: &'static str,
-        desc: &'static str,
+        pub desc: &'static str,
         handle: Handle
     };
-    macro_name = new_plugin
 }
 
 mod my_plugin {
-    use crate::{MyPlugin, Plugin};
+    use dyn_inventory::emit;
 
-    new_plugin! {
-        Handle {
-            name = "my plugin for abc-framework";
-            desc = "implements my plugin by doing xyz";
+    use crate::{MyPlugin, PluginInit};
+
+    emit! {
+        Handle MyPlugin as Plugin {
+            name = "my plugin for abc-framework",
+            desc = "implements my plugin by doing xyz",
         }
     }
 

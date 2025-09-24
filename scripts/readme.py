@@ -2,7 +2,7 @@ from pathlib import Path
 
 
 README = Path(__file__).parent.parent / "README.md"
-SRC = Path(__file__).parent.parent / "src/lib.rs"
+SRC = Path(__file__).parent.parent / "dyn-inventory/src/lib.rs"
 
 def trim_prefix(s: str, pre: str):
     if s.startswith(pre):

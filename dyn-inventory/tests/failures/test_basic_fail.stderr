@@ -1,0 +1,5 @@
+error: unknown keyword
+  --> tests/failures/test_basic_fail.rs:18:5
+   |
+18 |     unknown_kw = Bogus,
+   |     ^^^^^^^^^^

@@ -5,19 +5,21 @@ pub trait HandlesFlag {
 }
 
 dyn_inventory! {
-    HandlesFlag: Flag<Handle> {
+    Flag <Handle: HandlesFlag> {
         pub name: &'static str,
         handle: Handle
     };
-    macro_name = new_flag,
-    handle_name = Handle
 }
 
 mod my_flag {
-    use crate::{Flag, HandlesFlag};
+    use dyn_inventory::emit;
 
-    new_flag! {
-        name = "my flag for abc-cli";
+    use crate::{FlagInit, HandlesFlag};
+
+    emit! {
+        Handle HandlesFlag as Flag {
+            name = "my flag for abc-cli"
+        }
     }
 
     impl HandlesFlag for Handle {

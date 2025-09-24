@@ -7,16 +7,16 @@
 //
 //
 //
-//s
+//
 use dyn_inventory::dyn_inventory;
 
 dyn_inventory!(
-    TraitA: StructA<T> {
-        a: i16,
+    CommaIssueRegistry<T: PluginApi> {
+        size: i16,
         t: T,
     };
-    macro_name = my_macro
-    handle_name = MyHandle,
+    init_name = SomeInit
+    unknown = RegisterTwo,
 );
 
 fn main() {}
